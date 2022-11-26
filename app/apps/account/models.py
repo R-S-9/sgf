@@ -6,7 +6,7 @@ class ClientManager(models.Manager):
         return super().get_queryset().select_related("user")
 
 
-class Client(models.Model):
+class Teacher(models.Model):
     user = models.OneToOneField("auth.User", on_delete=models.CASCADE)
     GENDER_CHOICES = (("M", "Муж"), ("F", "Жен"))
     gender = models.CharField(
@@ -27,7 +27,7 @@ class Client(models.Model):
     )
 
     is_active = models.BooleanField(
-        'Подтвержденный аккаутн', default=False
+        'Подтвержденный аккаунт', default=False
     )
     objects = ClientManager()
 
@@ -36,4 +36,4 @@ class Client(models.Model):
 
     class Meta:
         verbose_name = 'Преподаватель'
-        verbose_name_plural = 'Преподователи'
+        verbose_name_plural = 'Преподаватели'
