@@ -7,7 +7,9 @@ class ClientManager(models.Manager):
 
 
 class Teacher(models.Model):
-    user = models.OneToOneField("auth.User", on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        "auth.User", verbose_name='Пользователь', on_delete=models.CASCADE
+    )
     GENDER_CHOICES = (("M", "Муж"), ("F", "Жен"))
     gender = models.CharField(
         "Пол", max_length=1, choices=GENDER_CHOICES, blank=True
@@ -30,6 +32,8 @@ class Teacher(models.Model):
         'Подтвержденный аккаунт', default=False
     )
     objects = ClientManager()
+
+    # TODO добавить общую оценку преподавателя, из суммы оценок его курсов.
 
     def __str__(self):
         return f'{self.user.email} {self.first_name} {self.last_name}'
