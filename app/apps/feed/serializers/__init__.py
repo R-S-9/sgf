@@ -1,1 +1,2 @@
 from .course_serializers import TrainingCourseSerializer
+from .review_serializer import ReviewSerializer

@@ -4,6 +4,7 @@ from apps.account.models import Teacher
 
 
 class TrainingCourse(models.Model):
+    """Курс тренировок"""
     EASY = 'EASY'
     MEDIUM = 'MEDIUM'
     HARD = 'HARD'
@@ -59,13 +60,13 @@ class TrainingCourse(models.Model):
                f'{self.level_training in {self.EASY, self.MEDIUM, self.HARD}}'
 
     class Meta:
-        verbose_name = 'Курс тренировок'
-        verbose_name_plural = 'Курсы тренировок'
+        verbose_name = 'Курс'
+        verbose_name_plural = 'Курсы'
 
 
 class CourseComposition(models.Model):
     """В курс входят. List"""
-    course = models.ForeignKey(
+    training_course_compositions = models.ForeignKey(
         TrainingCourse, verbose_name='Курса', on_delete=models.CASCADE
     )
     quantity = models.PositiveIntegerField(
@@ -78,8 +79,10 @@ class CourseComposition(models.Model):
     )
 
     def __str__(self):
-        return f'Преподаватель - {self.course.user.first_name} ' \
-               f'{self.course.user.last_name}, курс - {self.course.name}'
+        return f'Преподаватель - ' \
+               f'{self.training_course_compositions.user.first_name} ' \
+               f'{self.training_course_compositions.user.last_name}, курс - ' \
+               f'{self.training_course_compositions.name}'
 
     class Meta:
         verbose_name = 'В курс входит'
@@ -88,6 +91,10 @@ class CourseComposition(models.Model):
 
 class CourseProgram(models.Model):
     """Программа курса. Полный список всех уроков"""
+
+    training_course_program = models.ForeignKey(
+        TrainingCourse, verbose_name='Курса', on_delete=models.CASCADE, default=None
+    )
 
     chapter = models.CharField(
         verbose_name='Название главы', max_length=150
@@ -98,52 +105,10 @@ class CourseProgram(models.Model):
                   ' список курса',
     )
 
+    def __str__(self):
+        return f'Курс {self.training_course_program.name}, ' \
+               f'глава {self.chapter_number}'
+
     class Meta:
         verbose_name = 'Программа курса'
         verbose_name_plural = 'Программы курса'
-
-
-class Review(models.Model):
-    """Отзывы"""
-    review = models.TextField(
-        verbose_name='Отзыв',
-    )
-    training_course_id = models.ForeignKey(
-        TrainingCourse,
-        verbose_name='Отзыв о курсе',
-        on_delete=models.CASCADE,
-        related_name='reviews'
-    )
-    rating = models.IntegerField(
-        verbose_name='Оценка',
-    )
-    date_create = models.DateTimeField('Дата создания', auto_now=True)
-    order = models.IntegerField(
-        verbose_name='Номер комментария',
-        default=9999,
-    )
-
-    def _set_order(self):
-        last_order = self.__class__.objects.filter(
-            id_service_station=self.training_course_id
-        ).order_by('order').values_list(
-            'order', flat=True
-        ).last()
-
-        if last_order:
-            self.order = last_order + 1
-        else:
-            self.order = 1
-
-    def save(self, *args, **kwargs):
-        self._set_order()
-        super(Review, self).save(*args, **kwargs)
-
-    def __str__(self):
-        return f'{self.training_course_id} {self.review}'
-
-    class Meta:
-        verbose_name = 'Отзыв'
-        verbose_name_plural = 'Отзывы'
-        # unique_together = ('training_course_id', 'order')
-        ordering = ('-order',)
