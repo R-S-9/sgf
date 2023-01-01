@@ -16,9 +16,13 @@ class CourseProgramSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class TrainingCourseSerializer(serializers.ModelSerializer):
-    course_program = CourseProgramSerializer(many=True, source='courseprogram_set')
-    course_composition = CourseCompositionSerializer(many=True, source='coursecomposition_set')
-    average_rating = serializers.SerializerMethodField()
+    course_program = CourseProgramSerializer(
+        many=True, source='courseprogram_set', read_only=True
+    )
+    course_composition = CourseCompositionSerializer(
+        many=True, source='coursecomposition_set', read_only=True
+    )
+    average_rating = serializers.SerializerMethodField(read_only=True)
 
     def get_average_rating(self, obj):
         return obj.reviews.all().aggregate(Avg('rating'))['rating__avg']
