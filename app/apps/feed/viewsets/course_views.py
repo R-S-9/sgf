@@ -1,5 +1,5 @@
 from rest_framework import viewsets, mixins
-from apps.account.user_permissions.permissions import IsUserOrReadOnly
+from apps.account.permissions import IsUserOrReadOnly
 
 from ..models import (
     TrainingCourse,
