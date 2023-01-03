@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework import viewsets, mixins
 from rest_framework.permissions import AllowAny
 
-from ..user_permissions import IsUserOrReadOnly
+from ..permissions import IsUserOrReadOnly
 from ..serializers import UserSerializer, CreateUserSerializer
 
 
