@@ -24,7 +24,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("id", "email")
+        fields = ("id", "email", "password")
         extra_kwargs = {'password': {'write_only': True}}
 
 # TODO после подтверждения email и авторизации, перенаправлять на
