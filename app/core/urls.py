@@ -15,4 +15,5 @@ urlpatterns = [
 
     # apps
     path('feed/', include("apps.feed.urls"), name='feed'),
+    path('account/', include("apps.account.urls"), name='account'),
 ]
