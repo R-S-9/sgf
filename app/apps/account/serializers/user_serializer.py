@@ -18,9 +18,15 @@ class CreateUserSerializer(serializers.ModelSerializer):
             username=validated_data.get('email'),
             email=validated_data.get('email'),
             password=validated_data.get('password'),
+            is_active=False,
         )
-        SendCodeEmail.send_login_code(user.id, validated_data.get('email'))
-        return user
+        send = SendCodeEmail.send_login_code(user)
+
+        if send:
+            return user
+        raise serializers.ValidationError(
+            f"Email send user {validated_data.get('email')} error."
+        )
 
     class Meta:
         model = User
